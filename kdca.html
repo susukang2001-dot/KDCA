@@ -1,0 +1,1070 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>대한민국 질병관리청 (KDCA) - 국민 건강과 보건 안보의 든든한 방패</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <!-- Leaflet CSS & JS for Map -->
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+    * { font-family: 'Pretendard', sans-serif; }
+    html { scroll-behavior: smooth; }
+    .hero-gradient {
+      background: linear-gradient(135deg, #fdf2f4 0%, #fce7f0 50%, #fbcfe8 100%);
+    }
+    .custom-scroll::-webkit-scrollbar {
+      height: 6px;
+      width: 6px;
+    }
+    .custom-scroll::-webkit-scrollbar-thumb {
+      background: #fbcfe8;
+      border-radius: 9999px;
+    }
+  </style>
+</head>
+<body class="bg-rose-50/40 text-slate-800 antialiased flex flex-col min-h-screen">
+
+  <!-- Header / Navigation -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-pink-100 shadow-xs transition-all">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-pink-500 to-rose-400 flex items-center justify-center text-white shadow-md shadow-pink-200">
+          <i data-lucide="shield-plus" class="w-7 h-7"></i>
+        </div>
+        <div>
+          <span class="text-xs font-bold text-pink-600 tracking-wider uppercase block">대한민국 중앙행정기관</span>
+          <h1 class="text-xl font-black text-slate-900 tracking-tight leading-tight">
+            질병관리청 <span class="text-xs font-bold text-pink-400 font-sans tracking-normal">KDCA</span>
+          </h1>
+        </div>
+      </div>
+      
+      <!-- Nav Menu -->
+      <nav class="hidden lg:flex items-center gap-1 bg-pink-50/80 p-1.5 rounded-full border border-pink-100">
+        <a href="#checker" class="px-3.5 py-2 text-sm font-bold rounded-full text-pink-700 bg-white hover:bg-pink-100/60 shadow-xs transition flex items-center gap-1">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-pink-500"></i> 맞춤 혜택 찾기
+        </a>
+        <a href="#about" class="px-3 py-2 text-sm font-semibold rounded-full text-slate-600 hover:text-pink-600 hover:bg-white transition">기관 비전</a>
+        <a href="#duties" class="px-3 py-2 text-sm font-semibold rounded-full text-slate-600 hover:text-pink-600 hover:bg-white transition">핵심 업무</a>
+        <a href="#trends" class="px-3 py-2 text-sm font-semibold rounded-full text-slate-600 hover:text-pink-600 hover:bg-white transition">국민 보건 동향</a>
+        <a href="#news" class="px-3 py-2 text-sm font-semibold rounded-full text-slate-600 hover:text-pink-600 hover:bg-white transition">최신 뉴스·보도</a>
+        <a href="#location" class="px-4 py-2 text-sm font-bold rounded-full bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-sm hover:from-pink-600 hover:to-rose-600 transition flex items-center gap-1.5 shadow-pink-200">
+          <i data-lucide="map-pin" class="w-4 h-4"></i> 오시는 길
+        </a>
+      </nav>
+
+      <!-- Quick External Portal Link -->
+      <div class="flex items-center gap-2">
+        <a href="https://www.kdca.go.kr" target="_blank" rel="noopener noreferrer" 
+           class="inline-flex items-center gap-1.5 px-3.5 py-2 text-xs font-bold rounded-lg border border-pink-200 bg-white text-pink-700 hover:bg-pink-50 transition shadow-xs">
+          <span>질병관리청 누리집</span>
+          <i data-lucide="external-link" class="w-3.5 h-3.5 text-pink-400"></i>
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section (Soft Pink Theme) -->
+  <section class="hero-gradient text-slate-800 py-20 px-4 sm:px-6 lg:px-8 relative overflow-hidden border-b border-pink-100">
+    <!-- Decorative Soft Blobs -->
+    <div class="absolute -top-24 -left-24 w-96 h-96 bg-pink-200/40 rounded-full blur-3xl pointer-events-none"></div>
+    <div class="absolute -bottom-24 -right-24 w-96 h-96 bg-rose-200/40 rounded-full blur-3xl pointer-events-none"></div>
+    
+    <div class="max-w-6xl mx-auto text-center relative z-10">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/80 border border-pink-200 text-pink-700 text-xs sm:text-sm font-semibold mb-6 shadow-xs backdrop-blur">
+        <span class="w-2.5 h-2.5 rounded-full bg-pink-500 animate-ping"></span>
+        따뜻한 동행, 건강하고 안전한 대한민국을 위한 방패
+      </div>
+      <h2 class="text-3xl sm:text-5xl lg:text-6xl font-black tracking-tight leading-tight mb-6 text-slate-900">
+        감염병 위기부터 만성질환까지<br class="hidden sm:inline">
+        <span class="text-transparent bg-clip-text bg-gradient-to-r from-pink-600 via-rose-500 to-pink-500">국민의 생명과 건강</span>을 세심하게 지킵니다
+      </h2>
+      <p class="text-slate-600 text-base sm:text-lg max-w-3xl mx-auto leading-relaxed mb-10 font-normal">
+        질병관리청(KDCA)은 신종 감염병 24시간 감시·대응, 전 생애주기 국가예방접종(NIP), 
+        초고령사회 만성질환 예방 및 국가 보건의료 R&D를 총괄하는 전문 방역기관입니다.
+      </p>
+      <div class="flex flex-wrap justify-center gap-4">
+        <a href="#checker" class="px-7 py-3.5 rounded-xl bg-gradient-to-r from-pink-500 to-rose-500 hover:from-pink-600 hover:to-rose-600 text-white font-bold transition flex items-center gap-2 shadow-lg shadow-pink-300/50">
+          <i data-lucide="sparkles" class="w-4 h-4 text-pink-100"></i> 내게 필요한 질병청 혜택 찾기 (체크리스트)
+        </a>
+        <a href="#duties" class="px-6 py-3.5 rounded-xl bg-white hover:bg-pink-50 text-pink-700 border border-pink-200 font-bold transition flex items-center gap-2 shadow-xs">
+          주요 업무 알아보기 <i data-lucide="arrow-down" class="w-4 h-4 text-pink-500"></i>
+        </a>
+        <a href="#news" class="px-6 py-3.5 rounded-xl bg-pink-100/70 hover:bg-pink-200 text-pink-800 font-bold transition flex items-center gap-2">
+          최신 뉴스·보도 확인 <i data-lucide="newspaper" class="w-4 h-4"></i>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Quick Statistics / Key Metrics Banner -->
+  <section class="bg-white border-b border-pink-100 py-8">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="grid grid-cols-2 md:grid-cols-4 gap-6 text-center divide-x-0 md:divide-x divide-pink-100">
+        <div class="p-2">
+          <p class="text-3xl sm:text-4xl font-black text-pink-600">24 / 7</p>
+          <p class="text-xs sm:text-sm font-semibold text-slate-600 mt-1">긴급상황실 감염병 상시 감시</p>
+        </div>
+        <div class="p-2">
+          <p class="text-3xl sm:text-4xl font-black text-rose-500">WHO 최고수준</p>
+          <p class="text-xs sm:text-sm font-semibold text-slate-600 mt-1">국가 보건안보 합동평가(JEE) 공인</p>
+        </div>
+        <div class="p-2">
+          <p class="text-3xl sm:text-4xl font-black text-pink-500">18종+</p>
+          <p class="text-xs sm:text-sm font-semibold text-slate-600 mt-1">어린이·어르신 국가예방접종 지원</p>
+        </div>
+        <div class="p-2">
+          <p class="text-3xl sm:text-4xl font-black text-rose-600">1339</p>
+          <p class="text-xs sm:text-sm font-semibold text-slate-600 mt-1">질병관리청 감염병 전문 콜센터</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: 국민 맞춤형 혜택 & 지원 체크리스트 (Checker) -->
+  <section id="checker" class="py-16 bg-gradient-to-b from-pink-50/70 to-rose-50/40 border-b border-pink-100">
+    <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      
+      <!-- Section Header -->
+      <div class="text-center max-w-3xl mx-auto mb-10">
+        <span class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-bold bg-pink-100 text-pink-700 mb-2 border border-pink-200">
+          <i data-lucide="sparkles" class="w-3.5 h-3.5 text-pink-500"></i> 국민 맞춤형 공공 보건 서비스
+        </span>
+        <h3 class="text-3xl font-extrabold text-slate-900 tracking-tight">
+          "나는 질병관리청에서 어떤 도움을 받을 수 있을까?"
+        </h3>
+        <p class="text-slate-600 mt-2 text-sm sm:text-base">
+          현재 나의 상황(생애주기, 질환 여부, 여행 계획 등)에 해당하는 항목을 선택해 보세요.<br class="hidden sm:inline">
+          국가가 무료로 제공하는 지원 사업과 맞춤 혜택을 즉시 확인하실 수 있습니다.
+        </p>
+      </div>
+
+      <!-- Checklist Interactive Card -->
+      <div class="bg-white rounded-3xl border border-pink-100 p-6 sm:p-10 shadow-lg shadow-pink-100/50">
+        
+        <div class="flex items-center justify-between pb-5 mb-6 border-b border-pink-50">
+          <div>
+            <h4 class="text-lg font-bold text-slate-900 flex items-center gap-2">
+              <i data-lucide="check-square" class="w-5 h-5 text-pink-500"></i>
+              체크리스트 질문 (해당하는 것을 모두 체크하세요)
+            </h4>
+            <p class="text-xs text-slate-500 mt-0.5">선택 즉시 하단에 맞춤 지원 혜택 및 신청 링크가 계산됩니다.</p>
+          </div>
+          <button onclick="resetChecker()" class="text-xs font-semibold text-slate-500 hover:text-pink-600 flex items-center gap-1 px-3 py-1.5 rounded-lg border border-pink-100 hover:bg-pink-50 transition">
+            <i data-lucide="rotate-ccw" class="w-3.5 h-3.5"></i> 초기화
+          </button>
+        </div>
+
+        <!-- Checkbox Options Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3.5 mb-8" id="checkbox-container">
+          
+          <!-- Item 1 -->
+          <label class="check-card flex items-start gap-3 p-4 rounded-2xl border border-slate-200 hover:border-pink-300 bg-slate-50/50 hover:bg-pink-50/40 cursor-pointer transition select-none">
+            <input type="checkbox" value="child" onchange="runBenefitCheck()" class="mt-1 w-4 h-4 text-pink-600 rounded border-slate-300 focus:ring-pink-500">
+            <div>
+              <span class="text-sm font-bold text-slate-900 block">영유아·어린이 자녀 양육 중</span>
+              <span class="text-xs text-slate-500">생후 6개월 ~ 만 13세 이하 자녀가 있는 부모</span>
+            </div>
+          </label>
+
+          <!-- Item 2 -->
+          <label class="check-card flex items-start gap-3 p-4 rounded-2xl border border-slate-200 hover:border-pink-300 bg-slate-50/50 hover:bg-pink-50/40 cursor-pointer transition select-none">
+            <input type="checkbox" value="senior" onchange="runBenefitCheck()" class="mt-1 w-4 h-4 text-pink-600 rounded border-slate-300 focus:ring-pink-500">
+            <div>
+              <span class="text-sm font-bold text-slate-900 block">만 65세 이상 어르신 (본인/부모)</span>
+              <span class="text-xs text-slate-500">1960년 이전 출생 고령층 가구</span>
+            </div>
+          </label>
+
+          <!-- Item 3 -->
+          <label class="check-card flex items-start gap-3 p-4 rounded-2xl border border-slate-200 hover:border-pink-300 bg-slate-50/50 hover:bg-pink-50/40 cursor-pointer transition select-none">
+            <input type="checkbox" value="chronic" onchange="runBenefitCheck()" class="mt-1 w-4 h-4 text-pink-600 rounded border-slate-300 focus:ring-pink-500">
+            <div>
+              <span class="text-sm font-bold text-slate-900 block">고혈압·당뇨·만성질환 보유자</span>
+              <span class="text-xs text-slate-500">심뇌혈관, 고지혈증 등 정기 검사·약 복용 환자</span>
+            </div>
+          </label>
+
+          <!-- Item 4 -->
+          <label class="check-card flex items-start gap-3 p-4 rounded-2xl border border-slate-200 hover:border-pink-300 bg-slate-50/50 hover:bg-pink-50/40 cursor-pointer transition select-none">
+            <input type="checkbox" value="travel" onchange="runBenefitCheck()" class="mt-1 w-4 h-4 text-pink-600 rounded border-slate-300 focus:ring-pink-500">
+            <div>
+              <span class="text-sm font-bold text-slate-900 block">해외여행 또는 출장 예정/귀국</span>
+              <span class="text-xs text-slate-500">동남아, 중남미, 아프리카 등 방문자</span>
+            </div>
+          </label>
+
+          <!-- Item 5 -->
+          <label class="check-card flex items-start gap-3 p-4 rounded-2xl border border-slate-200 hover:border-pink-300 bg-slate-50/50 hover:bg-pink-50/40 cursor-pointer transition select-none">
+            <input type="checkbox" value="rare" onchange="runBenefitCheck()" class="mt-1 w-4 h-4 text-pink-600 rounded border-slate-300 focus:ring-pink-500">
+            <div>
+              <span class="text-sm font-bold text-slate-900 block">희귀질환 환우 또는 의심 가구</span>
+              <span class="text-xs text-slate-500">의료비 부담 완화 및 정밀 진단 검사가 필요한 환자</span>
+            </div>
+          </label>
+
+          <!-- Item 6 -->
+          <label class="check-card flex items-start gap-3 p-4 rounded-2xl border border-slate-200 hover:border-pink-300 bg-slate-50/50 hover:bg-pink-50/40 cursor-pointer transition select-none">
+            <input type="checkbox" value="vaccine_side" onchange="runBenefitCheck()" class="mt-1 w-4 h-4 text-pink-600 rounded border-slate-300 focus:ring-pink-500">
+            <div>
+              <span class="text-sm font-bold text-slate-900 block">백신 접종 후 이상반응 경험</span>
+              <span class="text-xs text-slate-500">예방접종 후 발열·염증·알레르기 치료 및 피해 보상 신청</span>
+            </div>
+          </label>
+
+          <!-- Item 7 -->
+          <label class="check-card flex items-start gap-3 p-4 rounded-2xl border border-slate-200 hover:border-pink-300 bg-slate-50/50 hover:bg-pink-50/40 cursor-pointer transition select-none">
+            <input type="checkbox" value="outdoor" onchange="runBenefitCheck()" class="mt-1 w-4 h-4 text-pink-600 rounded border-slate-300 focus:ring-pink-500">
+            <div>
+              <span class="text-sm font-bold text-slate-900 block">등산·농작업 등 잦은 야외활동</span>
+              <span class="text-xs text-slate-500">진드기(SFTS), 쯔쯔가무시 등 감염 주의자</span>
+            </div>
+          </label>
+
+          <!-- Item 8 -->
+          <label class="check-card flex items-start gap-3 p-4 rounded-2xl border border-slate-200 hover:border-pink-300 bg-slate-50/50 hover:bg-pink-50/40 cursor-pointer transition select-none">
+            <input type="checkbox" value="pregnant" onchange="runBenefitCheck()" class="mt-1 w-4 h-4 text-pink-600 rounded border-slate-300 focus:ring-pink-500">
+            <div>
+              <span class="text-sm font-bold text-slate-900 block">임신부 또는 가임기 여성</span>
+              <span class="text-xs text-slate-500">태아와 산모 건강을 위한 독감·백일해·HPV 등 접종 대상</span>
+            </div>
+          </label>
+
+          <!-- Item 9 -->
+          <label class="check-card flex items-start gap-3 p-4 rounded-2xl border border-slate-200 hover:border-pink-300 bg-slate-50/50 hover:bg-pink-50/40 cursor-pointer transition select-none">
+            <input type="checkbox" value="emergency" onchange="runBenefitCheck()" class="mt-1 w-4 h-4 text-pink-600 rounded border-slate-300 focus:ring-pink-500">
+            <div>
+              <span class="text-sm font-bold text-slate-900 block">원인 모를 감염 증상 / 긴급 상담</span>
+              <span class="text-xs text-slate-500">심한 발열·발진 등 감염병 의심 시 24시간 실시간 전문 상담</span>
+            </div>
+          </label>
+
+        </div>
+
+        <!-- Result Box Container -->
+        <div id="benefit-result-container" class="border-t border-pink-50 pt-8">
+          
+          <!-- Default State (Nothing selected) -->
+          <div id="benefit-empty-state" class="text-center py-10 bg-pink-50/40 rounded-2xl border border-dashed border-pink-200">
+            <div class="w-12 h-12 rounded-full bg-pink-100 text-pink-500 flex items-center justify-center mx-auto mb-3">
+              <i data-lucide="mouse-pointer-click" class="w-6 h-6"></i>
+            </div>
+            <h5 class="text-base font-bold text-slate-800">위 체크리스트에서 해당되는 항목을 선택해 주세요</h5>
+            <p class="text-xs text-slate-500 mt-1 max-w-md mx-auto">
+              선택하신 조건에 맞춰 질병관리청에서 지원하는 국가 지원금, 무료 접종, 검역 서비스, 이상반응 보상 제도 등 맞춤 지원책을 즉시 정리해 드립니다.
+            </p>
+          </div>
+
+          <!-- Active Results (Dynamic Content) -->
+          <div id="benefit-active-results" class="hidden">
+            <div class="flex items-center justify-between mb-4">
+              <h5 class="text-base font-black text-slate-900 flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-pink-500 animate-pulse"></span>
+                국민 맞춤 지원 서비스 결과 <span id="benefit-count-badge" class="ml-1 text-xs px-2.5 py-0.5 rounded-full bg-pink-100 text-pink-700 font-bold">0건</span>
+              </h5>
+              <span class="text-xs text-slate-400">* 카드 내 바로가기 링크를 통해 정부 신청 페이지로 이동할 수 있습니다.</span>
+            </div>
+
+            <div id="benefit-cards-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Dynamically populated cards -->
+            </div>
+          </div>
+
+        </div>
+
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Section: 기관 비전 및 역할 (About) -->
+  <section id="about" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-3xl mx-auto mb-12">
+      <span class="text-pink-600 font-bold text-xs sm:text-sm tracking-widest uppercase">VISION & MISSION</span>
+      <h3 class="text-3xl font-extrabold text-slate-900 mt-1">질병관리청의 비전과 설립 목적</h3>
+      <p class="text-slate-600 mt-2">전문성과 과학적 근거를 바탕으로 감염병으로부터 안전하고 만성질환으로부터 건강한 사회를 만듭니다.</p>
+    </div>
+
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <!-- Card 1 -->
+      <div class="bg-white p-8 rounded-2xl border border-pink-100 shadow-xs hover:shadow-md transition">
+        <div class="w-12 h-12 rounded-xl bg-pink-50 text-pink-600 flex items-center justify-center mb-5">
+          <i data-lucide="shield-check" class="w-6 h-6"></i>
+        </div>
+        <h4 class="text-xl font-bold text-slate-900 mb-2">보건 안보 수호</h4>
+        <p class="text-slate-600 text-sm leading-relaxed">
+          해외 유입 신종 감염병, 변종 바이러스 등 국가 안보를 위협하는 공중보건 위기상황을 조기에 탐지하고 신속하게 차단합니다.
+        </p>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="bg-white p-8 rounded-2xl border border-pink-100 shadow-xs hover:shadow-md transition">
+        <div class="w-12 h-12 rounded-xl bg-rose-50 text-rose-500 flex items-center justify-center mb-5">
+          <i data-lucide="activity" class="w-6 h-6"></i>
+        </div>
+        <h4 class="text-xl font-bold text-slate-900 mb-2">예방 중심 평생 건강</h4>
+        <p class="text-slate-600 text-sm leading-relaxed">
+          초고령사회 진입에 맞추어 심뇌혈관·당뇨·만성질환의 위험 요인을 생애주기별로 관리하여 국민의 건강수명을 실질적으로 연장합니다.
+        </p>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="bg-white p-8 rounded-2xl border border-pink-100 shadow-xs hover:shadow-md transition">
+        <div class="w-12 h-12 rounded-xl bg-pink-50 text-pink-600 flex items-center justify-center mb-5">
+          <i data-lucide="flask-conical" class="w-6 h-6"></i>
+        </div>
+        <h4 class="text-xl font-bold text-slate-900 mb-2">국가 보건의료 R&D 선도</h4>
+        <p class="text-slate-600 text-sm leading-relaxed">
+          소속 국립보건연구원(NIH) 및 공공백신개발지원센터를 통해 백신 자급화, 차세대 mRNA 기술 개발, 첨단 재생의료 연구를 주도합니다.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: 주요 업무 (Duties) -->
+  <section id="duties" class="py-16 bg-white border-y border-pink-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="text-center max-w-3xl mx-auto mb-14">
+        <span class="text-pink-600 font-bold text-xs sm:text-sm tracking-widest uppercase">CORE MISSIONS</span>
+        <h3 class="text-3xl font-extrabold text-slate-900 mt-1">국민을 지키는 4대 핵심 업무</h3>
+        <p class="text-slate-600 mt-2">과학적 근거와 촘촘한 방역망으로 국민의 일상을 안전하게 보호하고 있습니다.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        
+        <!-- Mission 1 -->
+        <div class="bg-rose-50/30 rounded-2xl p-7 border border-pink-100 shadow-xs flex gap-5">
+          <div class="w-14 h-14 rounded-2xl bg-pink-100 text-pink-600 flex items-center justify-center shrink-0">
+            <i data-lucide="virus" class="w-7 h-7"></i>
+          </div>
+          <div>
+            <h4 class="text-xl font-bold text-slate-900 mb-2">1. 감염병 위기 감시 및 24시간 대응</h4>
+            <p class="text-sm text-slate-600 leading-relaxed mb-4">
+              공항·항만 검역소 운영 및 하수(下水) 기반 감시, AI 기반 조기경보 시스템을 통해 신종 감염병과 해외 유입 감염병(엠폭스, 뎅기열, 조류인플루엔자 등)을 철저히 차단합니다.
+            </p>
+            <div class="flex flex-wrap gap-2 text-xs font-semibold">
+              <span class="px-2.5 py-1 bg-white border border-pink-200 text-pink-700 rounded-md">24시간 긴급상황실</span>
+              <span class="px-2.5 py-1 bg-white border border-pink-200 text-pink-700 rounded-md">공항·항만 국립검역소</span>
+              <span class="px-2.5 py-1 bg-white border border-pink-200 text-pink-700 rounded-md">하수 기반 감염병 감시</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mission 2 -->
+        <div class="bg-rose-50/30 rounded-2xl p-7 border border-pink-100 shadow-xs flex gap-5">
+          <div class="w-14 h-14 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
+            <i data-lucide="syringe" class="w-7 h-7"></i>
+          </div>
+          <div>
+            <h4 class="text-xl font-bold text-slate-900 mb-2">2. 국가예방접종(NIP) 및 백신 안보</h4>
+            <p class="text-sm text-slate-600 leading-relaxed mb-4">
+              어린이 필수 접종부터 어르신 폐렴구균·인플루엔자 접종까지 전액 국가 지원으로 안전망을 구축합니다. 이상반응 국가보상 및 국산 백신(탄저백신 등) 자급화를 선도합니다.
+            </p>
+            <div class="flex flex-wrap gap-2 text-xs font-semibold">
+              <span class="px-2.5 py-1 bg-white border border-pink-200 text-rose-700 rounded-md">국가예방접종 지원</span>
+              <span class="px-2.5 py-1 bg-white border border-pink-200 text-rose-700 rounded-md">신규 폐렴구균(PCV20) 도입</span>
+              <span class="px-2.5 py-1 bg-white border border-pink-200 text-rose-700 rounded-md">백신 안전성 보상체계</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mission 3 -->
+        <div class="bg-rose-50/30 rounded-2xl p-7 border border-pink-100 shadow-xs flex gap-5">
+          <div class="w-14 h-14 rounded-2xl bg-pink-100 text-pink-600 flex items-center justify-center shrink-0">
+            <i data-lucide="heart-pulse" class="w-7 h-7"></i>
+          </div>
+          <div>
+            <h4 class="text-xl font-bold text-slate-900 mb-2">3. 만성질환·희귀질환 및 손상 예방</h4>
+            <p class="text-sm text-slate-600 leading-relaxed mb-4">
+              국민건강영양조사를 통해 흡연·음주·비만·혈압 통계를 분석하고, 심뇌혈관질환 예방 관리 지침을 보급합니다. 희귀질환자 진단비 및 의료비 지원을 확대하고 있습니다.
+            </p>
+            <div class="flex flex-wrap gap-2 text-xs font-semibold">
+              <span class="px-2.5 py-1 bg-white border border-pink-200 text-pink-700 rounded-md">국민건강영양조사</span>
+              <span class="px-2.5 py-1 bg-white border border-pink-200 text-pink-700 rounded-md">희귀질환 헬프라인</span>
+              <span class="px-2.5 py-1 bg-white border border-pink-200 text-pink-700 rounded-md">진단검사 표준화 관리</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Mission 4 -->
+        <div class="bg-rose-50/30 rounded-2xl p-7 border border-pink-100 shadow-xs flex gap-5">
+          <div class="w-14 h-14 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center shrink-0">
+            <i data-lucide="thermometer-sun" class="w-7 h-7"></i>
+          </div>
+          <div>
+            <h4 class="text-xl font-bold text-slate-900 mb-2">4. 기후보건(폭염·한파) 및 환경성 질환 감시</h4>
+            <p class="text-sm text-slate-600 leading-relaxed mb-4">
+              기후변화에 따른 극한 온열·한랭 질환 피해를 줄이기 위해 전국 응급실 실시간 감시체계를 가동하고, 매개체(진드기·모기) 전염병 예방 활동을 적극 전개합니다.
+            </p>
+            <div class="flex flex-wrap gap-2 text-xs font-semibold">
+              <span class="px-2.5 py-1 bg-white border border-pink-200 text-rose-700 rounded-md">온열질환 응급실 감시</span>
+              <span class="px-2.5 py-1 bg-white border border-pink-200 text-rose-700 rounded-md">한랭질환 모니터링</span>
+              <span class="px-2.5 py-1 bg-white border border-pink-200 text-rose-700 rounded-md">진드기(SFTS) 예방 수칙</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: 국민 보건 동향 & 알기 쉬운 상식 (Trends) -->
+  <section id="trends" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-3xl mx-auto mb-12">
+      <span class="text-pink-600 font-bold text-xs sm:text-sm tracking-widest uppercase">HEALTH TRENDS & GUIDES</span>
+      <h3 class="text-3xl font-extrabold text-slate-900 mt-1">국민이 꼭 알아야 할 최신 보건 동향</h3>
+      <p class="text-slate-600 mt-2">전문 용어를 알기 쉽게 풀어 일상에서 바로 실천할 수 있는 보건 정보를 제공합니다.</p>
+    </div>
+
+    <!-- Interactive Tabs for Trends -->
+    <div class="bg-white rounded-3xl border border-pink-100 p-6 md:p-8 shadow-sm">
+      <div class="flex flex-wrap gap-2 border-b border-pink-100 pb-4 mb-6">
+        <button onclick="showTrendTab('tab-vaccine')" id="btn-tab-vaccine" class="px-5 py-2.5 text-sm font-bold rounded-xl transition bg-pink-500 text-white shadow-xs">
+          인플루엔자 & 호흡기 백신
+        </button>
+        <button onclick="showTrendTab('tab-climate')" id="btn-tab-climate" class="px-5 py-2.5 text-sm font-bold rounded-xl transition bg-pink-50 text-pink-700 hover:bg-pink-100">
+          기후위기 & 온·한랭질환
+        </button>
+        <button onclick="showTrendTab('tab-vector')" id="btn-tab-vector" class="px-5 py-2.5 text-sm font-bold rounded-xl transition bg-pink-50 text-pink-700 hover:bg-pink-100">
+          모기·진드기 매개감염병
+        </button>
+        <button onclick="showTrendTab('tab-chronic')" id="btn-tab-chronic" class="px-5 py-2.5 text-sm font-bold rounded-xl transition bg-pink-50 text-pink-700 hover:bg-pink-100">
+          만성질환 표준검사
+        </button>
+      </div>
+
+      <!-- Tab Content 1 -->
+      <div id="content-tab-vaccine" class="trend-content">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+          <div class="md:col-span-2">
+            <span class="text-xs font-bold text-pink-700 bg-pink-100 px-2.5 py-1 rounded-md">예방접종 동향</span>
+            <h4 class="text-xl font-bold text-slate-900 mt-2 mb-3">어르신·어린이 독감 및 코로나19 동시 접종 권고</h4>
+            <p class="text-sm text-slate-600 leading-relaxed mb-4">
+              질병관리청은 겨울철 호흡기 감염병 동시 유행(트윈데믹)을 방지하기 위해 65세 이상 어르신 및 면역저하자 대상 독감 백신과 코로나19 신규 변이 백신의 동시 접종을 적극 권장하고 있습니다. 질병청 연구 결과 두 백신을 동시 접종해도 안전성이 입증되었습니다.
+            </p>
+            <div class="bg-pink-50/50 p-4 rounded-xl border border-pink-100 text-xs text-slate-700 space-y-1">
+              <p>• <strong>지원 대상:</strong> 만 65세 이상 어르신, 생후 6개월~13세 어린이, 임신부</p>
+              <p>• <strong>접종 장소:</strong> 전국 지정 위탁의료기관 및 보건소 (신분증 지참)</p>
+            </div>
+          </div>
+          <div class="bg-pink-50/80 rounded-2xl p-6 text-center border border-pink-100">
+            <i data-lucide="calendar-check" class="w-12 h-12 text-pink-500 mx-auto mb-3"></i>
+            <h5 class="font-bold text-pink-950 text-sm">예방접종도우미 누리집</h5>
+            <p class="text-xs text-pink-700 mt-1 mb-4">내 주변 무료 접종 병원을 즉시 검색하세요</p>
+            <a href="https://nip.kdca.go.kr" target="_blank" class="inline-flex items-center gap-1 text-xs font-bold bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg transition shadow-xs">
+              지정의료기관 찾기 <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content 2 -->
+      <div id="content-tab-climate" class="trend-content hidden">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+          <div class="md:col-span-2">
+            <span class="text-xs font-bold text-rose-700 bg-rose-100 px-2.5 py-1 rounded-md">기후보건 동향</span>
+            <h4 class="text-xl font-bold text-slate-900 mt-2 mb-3">한파·폭염 응급실 감시 및 취약계층 보호</h4>
+            <p class="text-sm text-slate-600 leading-relaxed mb-4">
+              급격한 이상기후 현상에 대응하여 전국 500여 개 응급의료기관과 협력해 저체온증·동상 등 한랭질환과 열사병·열탈진 등 온열질환 환자 발생 추이를 매일 모니터링합니다. 고령층 만성질환자의 체온 조절 주의를 각별히 당부하고 있습니다.
+            </p>
+            <div class="bg-rose-50/50 p-4 rounded-xl border border-rose-100 text-xs text-slate-700 space-y-1">
+              <p>• <strong>건강 수칙:</strong> 기상정보 수시 확인, 헐렁하고 보온성 높은 복장, 충분한 수분 섭취</p>
+              <p>• <strong>주의 대상:</strong> 심뇌혈관질환자, 65세 이상 노인, 야외 작업 근로자</p>
+            </div>
+          </div>
+          <div class="bg-rose-50/80 rounded-2xl p-6 text-center border border-rose-100">
+            <i data-lucide="sun-snow" class="w-12 h-12 text-rose-500 mx-auto mb-3"></i>
+            <h5 class="font-bold text-rose-950 text-sm">기후보건 영향평가</h5>
+            <p class="text-xs text-rose-700 mt-1 mb-4">기후변화가 한국인의 건강에 미치는 영향을 과학적으로 분석합니다.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content 3 -->
+      <div id="content-tab-vector" class="trend-content hidden">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+          <div class="md:col-span-2">
+            <span class="text-xs font-bold text-pink-700 bg-pink-100 px-2.5 py-1 rounded-md">매개체 감염병 동향</span>
+            <h4 class="text-xl font-bold text-slate-900 mt-2 mb-3">SFTS(중증열성혈소판감소증후군) 및 뎅기열 예방</h4>
+            <p class="text-sm text-slate-600 leading-relaxed mb-4">
+              야외활동 및 농작업 시 진드기 물림으로 인한 SFTS는 백신과 치료제가 없으므로 물리지 않는 것이 최선의 예방책입니다. 또한 동남아 등 해외여행 증가에 따라 공항 검역소에서 뎅기열 신속진단검사를 무료로 제공하고 있습니다.
+            </p>
+            <div class="bg-pink-50/50 p-4 rounded-xl border border-pink-100 text-xs text-slate-700 space-y-1">
+              <p>• <strong>야외 수칙:</strong> 긴 팔·긴 바지 착용, 기피제 뿌리기, 풀밭 위에 눕지 않기</p>
+              <p>• <strong>귀가 후:</strong> 즉시 샤워 및 작업복 세탁, 고열·구토 등 증상 시 즉시 의료기관 방문</p>
+            </div>
+          </div>
+          <div class="bg-pink-50/80 rounded-2xl p-6 text-center border border-pink-100">
+            <i data-lucide="bug" class="w-12 h-12 text-pink-500 mx-auto mb-3"></i>
+            <h5 class="font-bold text-pink-950 text-sm">해외감염병 Now</h5>
+            <p class="text-xs text-pink-700 mt-1 mb-4">여행 전 국가별 감염병 유행 정보와 권고 백신을 확인하세요</p>
+            <a href="https://www.kdca.go.kr" target="_blank" class="inline-flex items-center gap-1 text-xs font-bold bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded-lg transition shadow-xs">
+              국가별 주의정보 <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+        </div>
+      </div>
+
+      <!-- Tab Content 4 -->
+      <div id="content-tab-chronic" class="trend-content hidden">
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-center">
+          <div class="md:col-span-2">
+            <span class="text-xs font-bold text-rose-700 bg-rose-100 px-2.5 py-1 rounded-md">만성질환 표준화</span>
+            <h4 class="text-xl font-bold text-slate-900 mt-2 mb-3">국가 진단검사 표준화 체계 도입 (당뇨·당화혈색소)</h4>
+            <p class="text-sm text-slate-600 leading-relaxed mb-4">
+              병원과 검사 기관마다 다를 수 있는 진단 검사 수치의 오차를 줄이기 위해 질병관리청이 대한진단검사의학회 등과 함께 검사 표준화 사업을 추진합니다. 정확한 검사를 바탕으로 만성질환을 조기에 발견하고 체계적으로 관리할 수 있습니다.
+            </p>
+            <div class="bg-rose-50/50 p-4 rounded-xl border border-rose-100 text-xs text-slate-700 space-y-1">
+              <p>• <strong>주요 대상:</strong> 당뇨병(HbA1c), 이상지질혈증, 만성신부전 혈청 크레아티닌 등</p>
+              <p>• <strong>기대 효과:</strong> 전국 어디서 검사해도 동일하고 신뢰도 높은 진단 결과 보장</p>
+            </div>
+          </div>
+          <div class="bg-rose-50/80 rounded-2xl p-6 text-center border border-rose-100">
+            <i data-lucide="check-check" class="w-12 h-12 text-rose-500 mx-auto mb-3"></i>
+            <h5 class="font-bold text-rose-950 text-sm">2025-2026 만성질환 팩트시트</h5>
+            <p class="text-xs text-rose-700 mt-1 mb-4">국내 주요 만성질환 통계와 건강지표를 한눈에 볼 수 있습니다.</p>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Section: 최신 뉴스 및 정책 보도자료 (News) -->
+  <section id="news" class="py-16 bg-rose-50/40 border-t border-pink-100">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row md:items-end justify-between mb-10">
+        <div>
+          <span class="text-pink-600 font-bold text-xs sm:text-sm tracking-widest uppercase">LATEST UPDATES</span>
+          <h3 class="text-3xl font-extrabold text-slate-900 mt-1">질병관리청 최신 뉴스 & 정책 보도자료</h3>
+          <p class="text-slate-600 mt-2">공식 보도자료 및 주요 언론사 보도 기사를 실시간으로 확인하실 수 있습니다.</p>
+        </div>
+        <div class="mt-4 md:mt-0 flex gap-2">
+          <a href="https://www.kdca.go.kr" target="_blank" class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-lg bg-white border border-pink-200 text-pink-700 hover:bg-pink-50 shadow-xs transition">
+            질병청 보도자료실 전체보기 <i data-lucide="external-link" class="w-3.5 h-3.5"></i>
+          </a>
+          <a href="https://www.korea.kr" target="_blank" class="inline-flex items-center gap-1.5 px-4 py-2 text-xs font-bold rounded-lg bg-pink-500 text-white hover:bg-pink-600 shadow-xs transition">
+            대한민국 정책브리핑 <i data-lucide="arrow-up-right" class="w-3.5 h-3.5"></i>
+          </a>
+        </div>
+      </div>
+
+      <!-- News Cards Grid with Live Links -->
+      <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        
+        <!-- News Card 1 -->
+        <article class="bg-white rounded-2xl border border-pink-100 shadow-xs hover:shadow-md transition flex flex-col justify-between p-6">
+          <div>
+            <div class="flex items-center justify-between text-xs text-slate-500 mb-3">
+              <span class="px-2.5 py-0.5 rounded-full font-bold bg-pink-50 text-pink-700 border border-pink-100">대한민국 정책브리핑</span>
+              <span>2026.10</span>
+            </div>
+            <h4 class="font-bold text-slate-900 text-base mb-2 hover:text-pink-600 transition">
+              <a href="https://www.korea.kr" target="_blank" rel="noopener noreferrer">
+                경남 의료기관 투석실 C형간염 확인, 전국 투석의료기관 감염관리 철저 당부
+              </a>
+            </h4>
+            <p class="text-xs text-slate-600 leading-relaxed line-clamp-3">
+              질병관리청은 경남 소재 한 의료기관 인공신장실에서 C형간염 집단감염을 확인하고 역학조사를 착수하였으며, 전국 혈액투석실에 철저한 감염관리 지침 준수를 긴급 당부했습니다.
+            </p>
+          </div>
+          <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-400">정책 보도자료</span>
+            <a href="https://www.korea.kr" target="_blank" class="text-xs font-bold text-pink-600 hover:underline flex items-center gap-1">
+              원문 보기 <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+        </article>
+
+        <!-- News Card 2 -->
+        <article class="bg-white rounded-2xl border border-pink-100 shadow-xs hover:shadow-md transition flex flex-col justify-between p-6">
+          <div>
+            <div class="flex items-center justify-between text-xs text-slate-500 mb-3">
+              <span class="px-2.5 py-0.5 rounded-full font-bold bg-rose-50 text-rose-700 border border-rose-100">연합뉴스 (YNA)</span>
+              <span>2026.10</span>
+            </div>
+            <h4 class="font-bold text-slate-900 text-base mb-2 hover:text-rose-600 transition">
+              <a href="https://www.yna.co.kr" target="_blank" rel="noopener noreferrer">
+                질병관리청, 만성질환 당화혈색소 등 ‘국가 진단검사 표준화’ 본격 확대
+              </a>
+            </h4>
+            <p class="text-xs text-slate-600 leading-relaxed line-clamp-3">
+              의료기관과 검사장비마다 차이를 보이던 당뇨병·만성질환 주요 지표의 측정 오차를 개선하기 위해 질병관리청과 학회가 손잡고 표준물질 보급 및 진단 일치도 관리에 돌입했습니다.
+            </p>
+          </div>
+          <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-400">보건의료 뉴스</span>
+            <a href="https://www.yna.co.kr" target="_blank" class="text-xs font-bold text-rose-600 hover:underline flex items-center gap-1">
+              기사 보기 <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+        </article>
+
+        <!-- News Card 3 -->
+        <article class="bg-white rounded-2xl border border-pink-100 shadow-xs hover:shadow-md transition flex flex-col justify-between p-6">
+          <div>
+            <div class="flex items-center justify-between text-xs text-slate-500 mb-3">
+              <span class="px-2.5 py-0.5 rounded-full font-bold bg-pink-50 text-pink-700 border border-pink-100">질병관리청 공식</span>
+              <span>2026.10</span>
+            </div>
+            <h4 class="font-bold text-slate-900 text-base mb-2 hover:text-pink-600 transition">
+              <a href="https://www.kdca.go.kr" target="_blank" rel="noopener noreferrer">
+                의료관련감염 예방관리 주간 포럼 개최… 다제내성균 통합관리 논의
+              </a>
+            </h4>
+            <p class="text-xs text-slate-600 leading-relaxed line-clamp-3">
+              전국 중소병원 및 요양병원의 항생제 내성균(AMR) 및 병원 내 감염을 예방하기 위한 종합 포럼을 개최하고 현장 중심의 감염관리 지원 체계를 한층 강화하기로 발표했습니다.
+            </p>
+          </div>
+          <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-400">공식 브리핑</span>
+            <a href="https://www.kdca.go.kr" target="_blank" class="text-xs font-bold text-pink-600 hover:underline flex items-center gap-1">
+              원문 보기 <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+        </article>
+
+        <!-- News Card 4 -->
+        <article class="bg-white rounded-2xl border border-pink-100 shadow-xs hover:shadow-md transition flex flex-col justify-between p-6">
+          <div>
+            <div class="flex items-center justify-between text-xs text-slate-500 mb-3">
+              <span class="px-2.5 py-0.5 rounded-full font-bold bg-rose-50 text-rose-700 border border-rose-100">정책브리핑</span>
+              <span>2026.10</span>
+            </div>
+            <h4 class="font-bold text-slate-900 text-base mb-2 hover:text-rose-600 transition">
+              <a href="https://www.korea.kr" target="_blank" rel="noopener noreferrer">
+                인플루엔자 국가 백신 수급 현황 점검 및 취약계층 적기 접종 당부
+              </a>
+            </h4>
+            <p class="text-xs text-slate-600 leading-relaxed line-clamp-3">
+              국가예방접종 대상인 어린이, 임신부 및 65세 이상 어르신의 독감 백신 유통 현황을 전수 모니터링하고 원활한 수급과 안전한 접종 관리에 만전을 기하고 있습니다.
+            </p>
+          </div>
+          <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-400">보도설명자료</span>
+            <a href="https://www.korea.kr" target="_blank" class="text-xs font-bold text-rose-600 hover:underline flex items-center gap-1">
+              원문 보기 <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+        </article>
+
+        <!-- News Card 5 -->
+        <article class="bg-white rounded-2xl border border-pink-100 shadow-xs hover:shadow-md transition flex flex-col justify-between p-6">
+          <div>
+            <div class="flex items-center justify-between text-xs text-slate-500 mb-3">
+              <span class="px-2.5 py-0.5 rounded-full font-bold bg-pink-50 text-pink-700 border border-pink-100">국제협력 보도</span>
+              <span>2025-2026</span>
+            </div>
+            <h4 class="font-bold text-slate-900 text-base mb-2 hover:text-pink-600 transition">
+              <a href="https://www.kdca.go.kr" target="_blank" rel="noopener noreferrer">
+                WHO 합동외부평가(JEE)서 한국 보건안보 역량 세계 최고 수준 인정
+              </a>
+            </h4>
+            <p class="text-xs text-slate-600 leading-relaxed line-clamp-3">
+              세계보건기구(WHO) 국제 전문가단의 엄격한 현장 실사를 통해 한국의 감염병 조기 탐지, 긴급상황실 지휘체계, 백신 비축 능력이 세계 최고 등급 판정을 받았습니다.
+            </p>
+          </div>
+          <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-400">글로벌 보건안보</span>
+            <a href="https://www.kdca.go.kr" target="_blank" class="text-xs font-bold text-pink-600 hover:underline flex items-center gap-1">
+              원문 보기 <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+        </article>
+
+        <!-- News Card 6 -->
+        <article class="bg-white rounded-2xl border border-pink-100 shadow-xs hover:shadow-md transition flex flex-col justify-between p-6">
+          <div>
+            <div class="flex items-center justify-between text-xs text-slate-500 mb-3">
+              <span class="px-2.5 py-0.5 rounded-full font-bold bg-rose-50 text-rose-700 border border-rose-100">R&D 국산화</span>
+              <span>2025-2026</span>
+            </div>
+            <h4 class="font-bold text-slate-900 text-base mb-2 hover:text-rose-600 transition">
+              <a href="https://www.kdca.go.kr" target="_blank" rel="noopener noreferrer">
+                세계 최초 재조합 단백질 탄저백신 개발 성공 및 상용화·국내 비축 체계 구축
+              </a>
+            </h4>
+            <p class="text-xs text-slate-600 leading-relaxed line-clamp-3">
+              전량 수입에 의존하던 생물테러 대응 핵심 물자인 탄저백신을 국내 기술로 독자 개발하여 국가 비축을 개시함으로써 국가 생물안보 주권을 확보했습니다.
+            </p>
+          </div>
+          <div class="mt-5 pt-4 border-t border-slate-100 flex items-center justify-between">
+            <span class="text-xs font-semibold text-slate-400">국립보건연구원</span>
+            <a href="https://www.kdca.go.kr" target="_blank" class="text-xs font-bold text-rose-600 hover:underline flex items-center gap-1">
+              원문 보기 <i data-lucide="chevron-right" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+        </article>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Section: 오시는 길 및 청사 안내 (Location) -->
+  <section id="location" class="py-16 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div class="text-center max-w-3xl mx-auto mb-12">
+      <span class="text-pink-600 font-bold text-xs sm:text-sm tracking-widest uppercase">DIRECTIONS & CONTACT</span>
+      <h3 class="text-3xl font-extrabold text-slate-900 mt-1">질병관리청 청사 찾아오시는 길</h3>
+      <p class="text-slate-600 mt-2">충북 청주시 오송보건의료행정타운 내에 위치하고 있습니다.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- Left: Interactive Leaflet Map -->
+      <div class="lg:col-span-7 bg-white rounded-3xl border border-pink-100 p-5 shadow-sm">
+        <div class="flex items-center justify-between pb-3 mb-3 border-b border-pink-50">
+          <div class="flex items-center gap-2">
+            <i data-lucide="map-pinned" class="w-5 h-5 text-pink-500"></i>
+            <span class="font-bold text-slate-800 text-sm sm:text-base">오송보건의료행정타운 질병관리청</span>
+          </div>
+          <div class="flex gap-2">
+            <a href="https://map.kakao.com/link/search/질병관리청" target="_blank" class="text-xs px-2.5 py-1 rounded-lg bg-yellow-400 text-yellow-950 font-bold hover:bg-yellow-300 transition">
+              카카오맵 길찾기
+            </a>
+            <a href="https://map.naver.com/v5/search/질병관리청" target="_blank" class="text-xs px-2.5 py-1 rounded-lg bg-green-500 text-white font-bold hover:bg-green-600 transition">
+              네이버지도 길찾기
+            </a>
+          </div>
+        </div>
+        
+        <div id="osong-map" class="w-full h-[400px] rounded-2xl z-10 border border-pink-100"></div>
+        <p class="text-xs text-slate-400 mt-2 text-right">* 지도를 마우스로 이동하거나 휠로 확대·축소할 수 있습니다.</p>
+      </div>
+
+      <!-- Right: Traffic & Visitor Guidelines -->
+      <div class="lg:col-span-5 space-y-4">
+        
+        <!-- Address & Contact Box -->
+        <div class="bg-white rounded-3xl border border-pink-100 p-6 shadow-xs">
+          <div class="flex items-start justify-between">
+            <div>
+              <span class="px-2.5 py-0.5 text-xs font-bold rounded-md bg-pink-100 text-pink-700">본청 청사</span>
+              <h4 class="text-lg font-black text-slate-900 mt-2">질병관리청 (오송행정타운)</h4>
+            </div>
+            <button onclick="copyAddress()" class="p-2 text-pink-500 hover:text-pink-700 hover:bg-pink-50 rounded-lg border border-pink-100 transition" title="주소 복사">
+              <i data-lucide="copy" class="w-4 h-4"></i>
+            </button>
+          </div>
+          <div class="mt-4 space-y-2 text-xs sm:text-sm text-slate-600">
+            <div class="flex items-start gap-2">
+              <i data-lucide="map-pin" class="w-4 h-4 text-pink-400 mt-0.5 shrink-0"></i>
+              <span id="target-addr" class="font-medium text-slate-800">충청북도 청주시 흥덕구 오송읍 오송생명2로 187 (우: 28159)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i data-lucide="phone-call" class="w-4 h-4 text-pink-400 shrink-0"></i>
+              <span><strong>질병관리청 콜센터:</strong> 국번없이 <span class="text-pink-600 font-bold">1339</span> (24시간)</span>
+            </div>
+            <div class="flex items-center gap-2">
+              <i data-lucide="clock" class="w-4 h-4 text-pink-400 shrink-0"></i>
+              <span><strong>청사 운영시간:</strong> 평일 09:00 ~ 18:00</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transportation Items -->
+        <div class="bg-white rounded-2xl border border-pink-100 p-4 shadow-xs">
+          <div class="flex items-center gap-3 mb-1.5">
+            <div class="w-8 h-8 rounded-lg bg-pink-50 text-pink-600 flex items-center justify-center shrink-0">
+              <i data-lucide="train" class="w-4 h-4"></i>
+            </div>
+            <h5 class="font-bold text-slate-900 text-sm">기차 / KTX 이용 시 (가장 빠름)</h5>
+          </div>
+          <p class="text-xs text-slate-600 pl-11 leading-relaxed">
+            <strong>오송역(KTX·SRT)</strong> 하차 ▷ 택시 이용 시 약 5분 소요, 또는 오송역 7번 출구에서 시내버스(53, 500, 511, 757, B3 등) 탑승 후 ‘보건의료행정타운’ 하차
+          </p>
+        </div>
+
+        <div class="bg-white rounded-2xl border border-pink-100 p-4 shadow-xs">
+          <div class="flex items-center gap-3 mb-1.5">
+            <div class="w-8 h-8 rounded-lg bg-rose-50 text-rose-500 flex items-center justify-center shrink-0">
+              <i data-lucide="car" class="w-4 h-4"></i>
+            </div>
+            <h5 class="font-bold text-slate-900 text-sm">자가용 이용 시</h5>
+          </div>
+          <p class="text-xs text-slate-600 pl-11 leading-relaxed">
+            <strong>경부고속도로:</strong> 청주IC ▷ 조치원 방면 36번 국도 ▷ 오송생명과학단지<br>
+            <strong>중부고속도로:</strong> 서청주IC ▷ 옥산 방면 ▷ 월곡사거리 ▷ 오송행정타운 민원주차장
+          </p>
+        </div>
+
+        <div class="bg-rose-50/70 rounded-2xl border border-rose-200 p-4 text-xs text-rose-900">
+          <div class="flex items-center gap-2 font-bold mb-1">
+            <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-600"></i> 방문객 출입 안내 (국가중요시설)
+          </div>
+          <p class="leading-relaxed">
+            청사 방문 시 남문 종합안내실에서 <strong>주민등록증·운전면허증 등 신분증</strong>을 제시하고 방문증을 발급받으셔야 출입이 가능합니다.
+          </p>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- Emergency 1339 Banner -->
+  <section class="bg-gradient-to-r from-pink-500 via-rose-500 to-pink-600 text-white py-10 shadow-inner">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="flex items-center gap-4">
+        <div class="w-14 h-14 rounded-2xl bg-white/20 border border-white/30 flex items-center justify-center text-white shrink-0 backdrop-blur">
+          <i data-lucide="phone-forwarded" class="w-7 h-7"></i>
+        </div>
+        <div>
+          <h4 class="text-xl font-bold">감염병 및 예방접종 문의는 언제나 1339</h4>
+          <p class="text-pink-100 text-xs sm:text-sm mt-0.5">365일 24시간 전문 상담원이 친절하게 안내해 드립니다. (유료/무료 안내 포함)</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-3">
+        <a href="tel:1339" class="px-6 py-3 rounded-xl bg-white text-pink-600 hover:bg-pink-50 font-black text-lg transition flex items-center gap-2 shadow-lg shadow-pink-900/10">
+          <i data-lucide="phone" class="w-5 h-5"></i> 국번없이 1339
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="mt-auto bg-slate-900 text-slate-400 py-12 border-t border-slate-800 text-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 pb-8 border-b border-slate-800">
+        <div>
+          <div class="flex items-center gap-2 text-white font-black text-base mb-2">
+            <i data-lucide="shield-check" class="w-5 h-5 text-pink-400"></i>
+            <span>대한민국 질병관리청 (KDCA)</span>
+          </div>
+          <p class="leading-relaxed text-slate-400">
+            (우: 28159) 충청북도 청주시 흥덕구 오송읍 오송생명2로 187 오송보건의료행정타운 질병관리청<br>
+            감염병 및 예방접종 전문 상담 : 국번없이 1339 | 대표전화 : 1877-1339
+          </p>
+        </div>
+        <div class="flex flex-wrap gap-4 font-semibold text-slate-300">
+          <a href="https://www.kdca.go.kr" target="_blank" class="hover:text-pink-400 transition">공식 누리집</a>
+          <a href="https://nip.kdca.go.kr" target="_blank" class="hover:text-pink-400 transition">예방접종도우미</a>
+          <a href="https://www.korea.kr" target="_blank" class="hover:text-pink-400 transition">대한민국 정책브리핑</a>
+          <a href="https://helpline.kdca.go.kr" target="_blank" class="hover:text-pink-400 transition">희귀질환헬프라인</a>
+        </div>
+      </div>
+      <div class="pt-6 flex flex-col sm:flex-row justify-between items-center text-slate-500 gap-2">
+        <p>© Korea Disease Control and Prevention Agency. All rights reserved.</p>
+        <p>본 웹 애플리케이션은 국민의 알권리와 보건 정보 접근성 향상을 위해 제작되었습니다.</p>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Application Logic -->
+  <script>
+    // 1. Initialize Map
+    function initMap() {
+      // Coordinates of Osong Administrative Town KDCA (approx 36.6268, 127.3323)
+      const lat = 36.6268;
+      const lng = 127.3323;
+
+      const map = L.map('osong-map').setView([lat, lng], 15);
+
+      L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        maxZoom: 19,
+        attribution: '© OpenStreetMap contributors'
+      }).addTo(map);
+
+      L.marker([lat, lng]).addTo(map)
+        .bindPopup(`
+          <div style="font-family: Pretendard, sans-serif; font-size: 13px; line-height: 1.4;">
+            <strong style="color: #db2777;">질병관리청 (본청)</strong><br>
+            충북 청주시 흥덕구 오송읍 오송생명2로 187<br>
+            오송보건의료행정타운
+          </div>
+        `)
+        .openPopup();
+    }
+
+    // 2. Trend Tab Switcher
+    function showTrendTab(tabId) {
+      const contents = document.querySelectorAll('.trend-content');
+      contents.forEach(el => el.classList.add('hidden'));
+
+      const buttons = ['btn-tab-vaccine', 'btn-tab-climate', 'btn-tab-vector', 'btn-tab-chronic'];
+      buttons.forEach(bId => {
+        const btn = document.getElementById(bId);
+        btn.className = "px-5 py-2.5 text-sm font-bold rounded-xl transition bg-pink-50 text-pink-700 hover:bg-pink-100";
+      });
+
+      // Show targeted content
+      const targetContent = document.getElementById(`content-${tabId}`);
+      if (targetContent) targetContent.classList.remove('hidden');
+
+      // Highlight targeted button
+      const targetBtn = document.getElementById(`btn-${tabId}`);
+      if (targetBtn) {
+        targetBtn.className = "px-5 py-2.5 text-sm font-bold rounded-xl transition bg-pink-500 text-white shadow-xs";
+      }
+
+      lucide.createIcons();
+    }
+
+    // 3. Copy Address Helper
+    function copyAddress() {
+      const addr = document.getElementById('target-addr').innerText;
+      navigator.clipboard.writeText(addr).then(() => {
+        alert(`질병관리청 주소가 복사되었습니다:\n${addr}`);
+      }).catch(() => {
+        alert(`주소: ${addr}`);
+      });
+    }
+
+    // 4. Personalized Benefit Checklist Logic
+    const benefitData = {
+      child: {
+        title: "어린이 국가예방접종(NIP) 전액 무료 지원",
+        badge: "영유아·어린이",
+        badgeColor: "bg-pink-100 text-pink-700",
+        icon: "baby",
+        summary: "생후 6개월부터 만 12세 이하 어린이는 결핵(BCG), B형간염, 수두, MMR, 일본뇌염, 신규 폐렴구균(PCV20) 등 18종 백신을 전국 어디서나 100% 무료로 접종받을 수 있습니다.",
+        actionText: "우리아이 접종내역 및 지정병원 조회",
+        actionUrl: "https://nip.kdca.go.kr"
+      },
+      senior: {
+        title: "만 65세 이상 어르신 무료 인플루엔자 & 코로나19 백신",
+        badge: "어르신·고령층",
+        badgeColor: "bg-rose-100 text-rose-800",
+        icon: "user-check",
+        summary: "만 65세 이상 어르신은 매년 가을/겨울 인플루엔자(독감) 백신과 신규 변이 대응 코로나19 백신을 가까운 동네 지정의료기관이나 보건소에서 무료로 동시 접종하실 수 있습니다. 폐렴구균(PCV23) 1회 무료 지원도 포함됩니다.",
+        actionText: "어르신 무료 접종 지정의료기관 찾기",
+        actionUrl: "https://nip.kdca.go.kr"
+      },
+      chronic: {
+        title: "국가 진단검사 표준화 & 만성질환 건강관리 지침",
+        badge: "만성질환자",
+        badgeColor: "bg-pink-100 text-pink-700",
+        icon: "activity",
+        summary: "당뇨병(당화혈색소 HbA1c), 고혈압, 고지혈증 환자가 전국 어느 병원에서도 오차 없는 정확한 검사 결과를 받을 수 있도록 국가 진단검사 표준물질을 보급하고 있으며, '심뇌혈관질환 예방관리 9대 생활수칙'과 교육자료를 무상 제공합니다.",
+        actionText: "질병청 만성질환 건강포털 자료실",
+        actionUrl: "https://www.kdca.go.kr"
+      },
+      travel: {
+        title: "해외여행자 뎅기열 무료 신속진단 & 국가별 감염병 경보",
+        badge: "해외여행·출장",
+        badgeColor: "bg-rose-100 text-rose-800",
+        icon: "plane-takeoff",
+        summary: "동남아, 중남미 등 감염병 유행 지역 방문 전 '해외감염병 Now'에서 필수 권고 백신(황열, 장티푸스, 말라리아 예방약)을 확인하세요. 귀국 시 주요 공항·항만 검역소에서 뎅기열 신속진단키트 검사를 무료로 받으실 수 있습니다.",
+        actionText: "국가별 해외감염병 유행 정보 확인",
+        actionUrl: "https://www.kdca.go.kr"
+      },
+      rare: {
+        title: "희귀질환 헬프라인 진단지원 및 의료비 지원사업",
+        badge: "희귀질환 가구",
+        badgeColor: "bg-pink-100 text-pink-700",
+        icon: "heart-handshake",
+        summary: "원인을 알기 어려운 희귀 유전질환자에 대해 유전자 정밀 진단비용을 지원하고, 국가 지정 희귀질환 산정특례 등록자에게 요양급여 본인부담금, 특수식이(특수분유 등) 구입비, 간병비 등을 지원합니다.",
+        actionText: "희귀질환 헬프라인 바로가기",
+        actionUrl: "https://helpline.kdca.go.kr"
+      },
+      vaccine_side: {
+        title: "예방접종 피해보상 국가책임제 신청 지원",
+        badge: "이상반응 피해보상",
+        badgeColor: "bg-rose-100 text-rose-700",
+        icon: "shield-alert",
+        summary: "국가예방접종 후 불가피하게 발생한 중증 이상반응에 대해 진료비, 간병비, 장애일시보상금, 사망일시보상금 등을 심의·보상해 드립니다. 주소지 관할 보건소에 신청서류를 제출하여 심의를 신청할 수 있습니다.",
+        actionText: "피해보상 신청절차 및 서식 안내",
+        actionUrl: "https://nip.kdca.go.kr"
+      },
+      outdoor: {
+        title: "진드기 매개감염병(SFTS) 예방용품 지원 & 역학조사",
+        badge: "야외활동·농업",
+        badgeColor: "bg-pink-100 text-pink-800",
+        icon: "trees",
+        summary: "농작업 및 야외활동 인구를 위해 전국 보건소와 협력하여 해충기피제 자동분사기를 보급하고 고위험 농업인 대상 예방 교육을 실시합니다. 야외활동 후 2주 이내 고열·소화기 증상 발생 시 즉각적인 검사 체계를 안내합니다.",
+        actionText: "진드기 매개감염병 예방수칙 확인",
+        actionUrl: "https://www.kdca.go.kr"
+      },
+      pregnant: {
+        title: "임신부 인플루엔자(독감) 무료 접종 및 여성 보건",
+        badge: "임신부·가임기",
+        badgeColor: "bg-rose-100 text-rose-700",
+        icon: "heart",
+        summary: "임신부는 임신 주수와 관계없이 전액 국비로 인플루엔자 백신을 무료 접종받을 수 있어 산모와 태아를 동시 보호할 수 있습니다. 또한 만 12~17세 여성 청소년 대상 사람유두종바이러스(HPV) 예방접종도 무료 지원됩니다.",
+        actionText: "임신부 무료 접종 안내",
+        actionUrl: "https://nip.kdca.go.kr"
+      },
+      emergency: {
+        title: "365일 24시간 1339 감염병 긴급 전문상담 센터",
+        badge: "긴급상담",
+        badgeColor: "bg-pink-600 text-white",
+        icon: "phone-call",
+        summary: "원인 불명의 급성 발열이나 감염병 의심 증상이 있거나, 가까운 선별 검사기관, 격리 기준, 백신 접종 방법 등을 알고 싶을 때 1년 365일 언제든 국번 없이 1339로 전화하시면 전담 간호사 및 상담원이 즉각 안내합니다.",
+        actionText: "1339 콜센터 바로 연결 (모바일)",
+        actionUrl: "tel:1339"
+      }
+    };
+
+    function runBenefitCheck() {
+      const checkboxes = document.querySelectorAll('#checkbox-container input[type="checkbox"]:checked');
+      const selectedKeys = Array.from(checkboxes).map(cb => cb.value);
+
+      const emptyState = document.getElementById('benefit-empty-state');
+      const activeResults = document.getElementById('benefit-active-results');
+      const cardsGrid = document.getElementById('benefit-cards-grid');
+      const countBadge = document.getElementById('benefit-count-badge');
+
+      if (selectedKeys.length === 0) {
+        emptyState.classList.remove('hidden');
+        activeResults.classList.add('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+      activeResults.classList.remove('hidden');
+      countBadge.innerText = `${selectedKeys.length}개 지원 분야`;
+
+      cardsGrid.innerHTML = selectedKeys.map(key => {
+        const item = benefitData[key];
+        if (!item) return '';
+        return `
+          <div class="bg-rose-50/30 hover:bg-white rounded-2xl border border-pink-100 p-6 shadow-xs hover:shadow-md transition flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between mb-3">
+                <span class="px-2.5 py-1 text-xs font-bold rounded-full ${item.badgeColor}">
+                  ${item.badge}
+                </span>
+                <div class="w-8 h-8 rounded-lg bg-pink-100 text-pink-600 flex items-center justify-center">
+                  <i data-lucide="${item.icon}" class="w-4 h-4"></i>
+                </div>
+              </div>
+              <h5 class="text-base font-bold text-slate-900 mb-2 leading-snug">
+                ${item.title}
+              </h5>
+              <p class="text-xs text-slate-600 leading-relaxed mb-4">
+                ${item.summary}
+              </p>
+            </div>
+            <div class="pt-3 border-t border-pink-100 flex items-center justify-between">
+              <span class="text-xs text-slate-400 font-medium">국가 전액/일부 지원</span>
+              <a href="${item.actionUrl}" target="_blank" rel="noopener noreferrer" 
+                 class="inline-flex items-center gap-1 text-xs font-bold text-pink-600 hover:text-pink-800 hover:underline">
+                <span>${item.actionText}</span>
+                <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+              </a>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    }
+
+    function resetChecker() {
+      const checkboxes = document.querySelectorAll('#checkbox-container input[type="checkbox"]');
+      checkboxes.forEach(cb => cb.checked = false);
+      runBenefitCheck();
+    }
+
+    // Initialize after DOM load
+    window.addEventListener('DOMContentLoaded', () => {
+      initMap();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>

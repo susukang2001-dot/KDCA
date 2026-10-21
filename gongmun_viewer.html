@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>행정안전부 공문서 & 고시·공고 요약 브리핑 시스템</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/static/pretendard.css');
+    * { font-family: 'Pretendard', sans-serif; }
+    html { scroll-behavior: smooth; }
+  </style>
+</head>
+<body class="bg-slate-50 text-slate-800 antialiased min-h-screen flex flex-col">
+
+  <!-- Header -->
+  <header class="sticky top-0 z-50 bg-white/95 backdrop-blur border-b border-slate-200 shadow-xs">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-18 py-3.5 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-blue-700 to-indigo-600 flex items-center justify-center text-white shadow-md shadow-blue-500/20">
+          <i data-lucide="file-text" class="w-6 h-6"></i>
+        </div>
+        <div>
+          <span class="text-xs font-bold text-blue-600 tracking-wider uppercase block">행정안전부 자료 아카이브</span>
+          <h1 class="text-lg sm:text-xl font-black text-slate-900 tracking-tight leading-tight">
+            공문·공고문 핵심 요약 브리핑
+          </h1>
+        </div>
+      </div>
+
+      <!-- Category Filter Pills -->
+      <div class="flex items-center gap-1.5 bg-slate-100 p-1 rounded-xl border border-slate-200 text-xs sm:text-sm font-bold">
+        <button onclick="filterCategory('all')" id="tab-all" class="category-btn px-3 py-1.5 rounded-lg bg-white text-blue-700 shadow-xs">
+          전체 보기 (<span id="count-all">0</span>)
+        </button>
+        <button onclick="filterCategory('notice')" id="tab-notice" class="category-btn px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900">
+          실제 공고문 (<span id="count-notice">0</span>)
+        </button>
+        <button onclick="filterCategory('law')" id="tab-law" class="category-btn px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900">
+          법령·고시 (<span id="count-law">0</span>)
+        </button>
+        <button onclick="filterCategory('template')" id="tab-template" class="category-btn px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900">
+          공문서 서식 (<span id="count-template">0</span>)
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Banner -->
+  <section class="bg-gradient-to-r from-slate-900 via-indigo-950 to-blue-950 text-white py-10 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-start md:items-center justify-between gap-6">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-blue-500/20 border border-blue-400/30 text-blue-300 text-xs font-semibold mb-3">
+          <span class="w-2 h-2 rounded-full bg-blue-400 animate-pulse"></span>
+          로컬 프로젝트 폴더 수집 문서 분석 완료
+        </div>
+        <h2 class="text-2xl sm:text-3xl font-black tracking-tight leading-snug">
+          행정안전부 수집 공문서의 핵심 정보와 요약을 한눈에
+        </h2>
+        <p class="text-slate-300 text-sm mt-1 max-w-2xl leading-relaxed">
+          폴더에 저장된 실제 공고문(hwpx), 법령·고시(pdf), 표준 기안문(hwp) 파일들의 주요 내용과 접수 일정, 시험 과목, 필수 서식을 간결하게 브리핑합니다.
+        </p>
+      </div>
+
+      <!-- Quick Search Bar -->
+      <div class="w-full md:w-80">
+        <div class="relative">
+          <i data-lucide="search" class="w-4 h-4 text-slate-400 absolute left-3.5 top-3.5"></i>
+          <input type="text" id="searchInput" oninput="handleSearch()" placeholder="제목, 공고번호, 키워드 검색..." 
+                 class="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white/10 border border-white/20 text-white placeholder-slate-400 text-sm focus:outline-hidden focus:ring-2 focus:ring-blue-400 backdrop-blur">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Main Content Layout (Master - Detail Grid) -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 flex-1 w-full">
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+      
+      <!-- Left Column: Document List Cards (5 cols) -->
+      <div class="lg:col-span-5 space-y-3" id="docListContainer">
+        <!-- Rendered by JS -->
+      </div>
+
+      <!-- Right Column: Document Detailed Summary View (7 cols) -->
+      <div class="lg:col-span-7 sticky top-24">
+        <div id="detailContainer" class="bg-white rounded-2xl border border-slate-200 p-6 sm:p-8 shadow-sm min-h-[500px]">
+          <!-- Detail Rendered by JS -->
+        </div>
+      </div>
+
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-white border-t border-slate-200 py-6 text-xs text-slate-500 mt-auto">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-2">
+      <p>행정안전부(MOIS) 공문·공고문 로컬 요약 웹 앱 (HTML/CSS/JS 단일 실행 규격)</p>
+      <div class="flex items-center gap-4 text-slate-600 font-medium">
+        <a href="https://www.mois.go.kr" target="_blank" class="hover:text-blue-600 transition">행정안전부 공식 누리집</a>
+        <a href="https://www.law.go.kr" target="_blank" class="hover:text-blue-600 transition">국가법령정보센터</a>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // All documents collected in the workspace
+    const documents = [
+      // 1. 공고문 (HWPX)
+      {
+        id: "notice_1",
+        category: "notice",
+        categoryName: "실제 공고문",
+        categoryBadge: "bg-blue-100 text-blue-700",
+        fileType: "HWPX",
+        fileName: "UNPOG 사무보조원 채용 공고문.hwpx",
+        docNumber: "UNPOG 공고 2026-2호",
+        title: "유엔거버넌스센터(UNPOG) 사무보조원 채용공고",
+        date: "2026. 10. 20.",
+        organization: "유엔거버넌스센터원장 (행정안전부 파견)",
+        summary: "유엔 산하 기구인 유엔거버넌스센터(인천 송도 G타워)에서 근무할 기간제 사무보조원 1명을 공개 채용하는 공고입니다.",
+        keyPoints: [
+          { label: "채용 인원", value: "1명 (사무보조원)" },
+          { label: "담당 업무", value: "회의 준비 및 지원, 일반행정, 예산·회계, 물품관리, 공용차량 운영 등" },
+          { label: "근무 조건", value: "주 5일, 월 평균 약 220만원 (초과근무수당 별도, 4대보험, 계약 1년/최대 5년)" },
+          { label: "근무 장소", value: "인천 연수구 아트센터대로 175 G타워 8층 (송도)" },
+          { label: "지원 자격", value: "대한민국 국적, 1·2종 보통 운전면허 소지자 (국제기구/행정기관 경력자 및 영어회화 가능자 우대)" },
+          { label: "원서 접수", value: "2026. 10. 20.(화) ~ 10. 31.(토) 24:00까지 이메일(mi0922@korea.kr) 접수" }
+        ],
+        tags: ["채용공고", "인천송도", "행정사무", "영어우대", "UN기구"]
+      },
+      {
+        id: "notice_2",
+        category: "notice",
+        categoryName: "실제 공고문",
+        categoryBadge: "bg-blue-100 text-blue-700",
+        fileType: "HWPX",
+        fileName: "2026년도 제19회 기업재난관리사(인증평가분야) 자격인증시험 시행 공고문.hwpx",
+        docNumber: "행정안전부 공고 제2026-1335호",
+        title: "2026년도 제19회 기업재난관리사(우수기업 인증평가분야) 자격인증시험 시행 공고",
+        date: "2026. 10. 20.",
+        organization: "행정안전부장관",
+        summary: "｢재해경감을 위한 기업의 자율활동 지원에 관한 법률｣에 따른 기업재난관리사 최고 등급인 우수기업 인증평가분야의 주관식 자격시험 공고입니다.",
+        keyPoints: [
+          { label: "응시 자격", value: "재해경감활동계획 수립 대행분야 인증서 소지자 중 '우수기업 인증평가분야 전문교육과정' 수료자" },
+          { label: "접수 기간", value: "2026. 11. 2.(월) ~ 11. 16.(월) 18:00까지 (인터넷/우편)" },
+          { label: "시험 일자", value: "2026. 11. 21.(토) 10:00 ~ 12:00 (성동공업고등학교, 서울 중구)" },
+          { label: "시험 과목", value: "총 20문항 주관식 (1교시: 인증제도 이해/기준, 2교시: 심사프로세스 각 10문항)" },
+          { label: "합격자 발표", value: "2026. 12. 14.(월) 10:00 이후" },
+          { label: "응시 수수료", value: "100,000원 (기업재해경감협회 납부)" }
+        ],
+        tags: ["자격시험", "재난관리", "주관식", "성동공고", "인증평가"]
+      },
+      {
+        id: "notice_3",
+        category: "notice",
+        categoryName: "실제 공고문",
+        categoryBadge: "bg-blue-100 text-blue-700",
+        fileType: "HWPX",
+        fileName: "2026년도 제51회 기업재난관리사(실무분야) 자격인증시험 시행 공고문.hwpx",
+        docNumber: "행정안전부 공고 제2026-1334호",
+        title: "2026년도 제51회 기업재난관리사(재해경감활동 실무분야) 자격인증시험 시행공고",
+        date: "2026. 10. 20.",
+        organization: "행정안전부장관",
+        summary: "기업의 재난 예방 및 사업연속성 관리 실무자를 양성하기 위한 국가공인 기업재난관리사(실무분야) 객관식 자격인증시험 공고입니다.",
+        keyPoints: [
+          { label: "응시 자격", value: "재해경감활동 실무분야 전문교육과정 이수 및 수료증 소지자" },
+          { label: "접수 기간", value: "2026. 11. 2.(월) ~ 11. 16.(월) 18:00까지" },
+          { label: "시험 일자", value: "2026. 11. 21.(토) 10:00 ~ 11:40 (100분, 성동공업고등학교)" },
+          { label: "시험 과목", value: "객관식 100문항 (프로젝트 개요, 업무영향분석/위험평가, 전략개발, 절차이해, 모니터링/평가 각 20문항)" },
+          { label: "합격자 발표", value: "2026. 12. 14.(월) 10:00 이후 (www.bcdm.or.kr)" },
+          { label: "응시 수수료", value: "50,000원" }
+        ],
+        tags: ["자격시험", "실무분야", "객관식100문항", "BCDM", "재해경감"]
+      },
+
+      // 2. 법령 및 고시·훈령 (PDF)
+      {
+        id: "law_1",
+        category: "law",
+        categoryName: "법령·고시",
+        categoryBadge: "bg-purple-100 text-purple-700",
+        fileType: "PDF",
+        fileName: "mois_law_notice_2026_62.pdf",
+        docNumber: "행정안전부 고시 제2026-62호",
+        title: "민원처리기준표 일부개정고시",
+        date: "2026. 10. 16.",
+        organization: "행정안전부",
+        summary: "국민이 행정기관에 신청하는 각종 민원사무의 구비서류, 처리기간, 수수료, 접수·처리기관 등의 기준을 최신 법령 개정사항에 맞춰 일괄 정비·고시한 문서입니다.",
+        keyPoints: [
+          { label: "주요 골자", value: "중앙부처 및 지자체 민원사무의 전자적 구비서류 간소화 및 행정정보 공동이용 확대" },
+          { label: "적용 효과", value: "국민의 불필요한 증명서 발급 부담 감소 및 민원 처리 처리기한의 명확한 단축 기준 제시" },
+          { label: "효력 발생", value: "고시한 날부터 즉시 시행" }
+        ],
+        tags: ["민원제도", "구비서류간소화", "행정혁신", "고시"]
+      },
+      {
+        id: "law_2",
+        category: "law",
+        categoryName: "법령·고시",
+        categoryBadge: "bg-purple-100 text-purple-700",
+        fileType: "PDF",
+        fileName: "mois_law_notice_2026_61.pdf",
+        docNumber: "행정안전부 고시 제2026-61호",
+        title: "인구감소지역 및 인구감소관심지역 지정 고시",
+        date: "2026. 10. 14.",
+        organization: "행정안전부",
+        summary: "｢인구감소지역 지원 특별법｣에 따라 지방소멸 위기 지역을 객관적 인구통계 지표로 분석하여 국가 재정(지방소멸대응기금)과 특례를 집중 지원하기 위해 구역을 지정·고시한 문서입니다.",
+        keyPoints: [
+          { label: "지정 목적", value: "지방소멸 위기에 직면한 시·군·구를 지정하여 재정·세제·정주여건 개선 패키지 집중 지원" },
+          { label: "지원 혜택", value: "지방소멸대응기금 우선 배분, 국비 공모사업 가점, 주거·일자리·교육 인프라 특례" },
+          { label: "관리 주기", value: "정기 인구 동향 통계를 반영하여 5년 단위 지정 및 정기 평가" }
+        ],
+        tags: ["지방소멸", "인구감소지역", "소멸대응기금", "균형발전"]
+      },
+      {
+        id: "law_3",
+        category: "law",
+        categoryName: "법령·고시",
+        categoryBadge: "bg-purple-100 text-purple-700",
+        fileType: "PDF",
+        fileName: "mois_law_rule_471.pdf",
+        docNumber: "행정안전부 훈령 제471호",
+        title: "중대범죄수사청수사관 인사 관련 권한 위임 규정",
+        date: "2026. 10.",
+        organization: "행정안전부",
+        summary: "신설 및 개편되는 수사 전문기구의 수사관에 대한 임용, 전보, 승진, 징계 등 인사권 행사의 투명성과 효율성을 위해 장관의 권한 일부를 소속 기관장에게 위임하는 훈령입니다.",
+        keyPoints: [
+          { label: "위임 내용", value: "중대범죄수사청 소속 수사관의 직급별 전보 및 일상적 복무 감독 권한의 하부 위임" },
+          { label: "제정 취지", value: "현장 중심의 신속한 인사 운영과 수사 독립성·전문성 보장" }
+        ],
+        tags: ["수사관인사", "권한위임", "행안부훈령", "조직운영"]
+      },
+      {
+        id: "law_4",
+        category: "law",
+        categoryName: "법령·고시",
+        categoryBadge: "bg-purple-100 text-purple-700",
+        fileType: "PDF",
+        fileName: "mois_law_rule_470.pdf",
+        docNumber: "행정안전부 훈령 제470호",
+        title: "자율기구 국민생활편의복합센터추진단 설치 및 운영 규정",
+        date: "2026. 10.",
+        organization: "행정안전부",
+        summary: "지자체 유휴 공간을 주민 생활밀착형 편의 공간으로 통합 조성하기 위한 한시적 자율기구 ‘국민생활편의복합센터추진단’의 임무와 조직 구성을 규정한 훈령입니다.",
+        keyPoints: [
+          { label: "추진단 역할", value: "복합 문화·행정·돌봄 서비스 제공을 위한 표준 모델 개발 및 지자체 공모 지원" },
+          { label: "조직 형태", value: "행정안전부 내 범정부 협업형 자율기구로 설치 운영" }
+        ],
+        tags: ["자율기구", "생활편의센터", "지역혁신", "훈령"]
+      },
+      {
+        id: "law_5",
+        category: "law",
+        categoryName: "법령·고시",
+        categoryBadge: "bg-purple-100 text-purple-700",
+        fileType: "PDF",
+        fileName: "mois_law_rule_469.pdf",
+        docNumber: "행정안전부 훈령 제469호",
+        title: "자율기구 경찰개혁협력지원단 설치 및 운영 규정",
+        date: "2026. 10.",
+        organization: "행정안전부",
+        summary: "경찰 제도 개선 및 수사 역량 지원 협력을 체계적으로 뒷받침하기 위해 행정안전부 내 임시 지원조직의 구성 및 운영 근거를 마련한 훈령입니다.",
+        keyPoints: [
+          { label: "주요 임무", value: "경찰 치안 정책 및 제도 발전 지원, 관련 법령 정비 협업" },
+          { label: "운영 기한", value: "자율기구 규정에 따른 한시 기구로 성과 평가 후 연장 여부 결정" }
+        ],
+        tags: ["경찰개혁", "협력지원단", "한시기구", "훈령"]
+      },
+
+      // 3. 공문서 서식 (HWP)
+      {
+        id: "template_1",
+        category: "template",
+        categoryName: "공문서 서식",
+        categoryBadge: "bg-emerald-100 text-emerald-700",
+        fileType: "HWP",
+        fileName: "gongmun_sample1.hwp",
+        docNumber: "시행규칙 [별지 제1호서식]",
+        title: "정부 표준 기안문 (일반기안문 및 시행문 겸용)",
+        date: "상시 서식 규격",
+        organization: "행정안전부 (행정업무운영편람)",
+        summary: "대한민국 모든 중앙부처와 지자체, 공공기관이 대외 기관에 문서를 발송하거나 내부 기안 시 반드시 준수해야 하는 가장 기본적이고 대표적인 공문서 표준 양식입니다.",
+        keyPoints: [
+          { label: "서식 구성", value: "두문(행정기관명, 수신자), 본문(제목, 내용, 붙임), 결문(발신명의, 직인생략, 담당자 정보, 시행일자, 공개구분)" },
+          { label: "항목 구분 규정", value: "1. ▷ 가. ▷ 1) ▷ 가) ▷ (1) ▷ (가) ▷ ① ▷ ㉮ 순서로 체계적 들여쓰기 적용" },
+          { label: "활용 목적", value: "대외 공문 발송, 협조문, 계획 보고서 작성 시 표준 레이아웃 참고용" }
+        ],
+        tags: ["표준기안문", "대외발송용", "두문본문결문", "공문서식"]
+      },
+      {
+        id: "template_2",
+        category: "template",
+        categoryName: "공문서 서식",
+        categoryBadge: "bg-emerald-100 text-emerald-700",
+        fileType: "HWP",
+        fileName: "gongmun_sample2_internal.hwp",
+        docNumber: "시행규칙 [별지 제2호서식]",
+        title: "내부결재 전용 기안문 서식",
+        date: "상시 서식 규격",
+        organization: "행정안전부",
+        summary: "대외로 문서를 발신하지 않고 기관 내부의 방침 결정, 정책 보고, 일상 결재용으로 사용하는 간소화된 내부결재 전용 서식입니다.",
+        keyPoints: [
+          { label: "특징", value: "수신자란 및 발신명의(기관장 직인 등)가 생략되고 기안자·검토자·결재권자의 결재란 중심 구성" },
+          { label: "활용", value: "기안 부서 내 결재, 업무계획 수립 보고서, 예산 집행 품의서 등" }
+        ],
+        tags: ["내부결재", "방침결정", "품의서", "간소화서식"]
+      },
+      {
+        id: "template_3",
+        category: "template",
+        categoryName: "공문서 서식",
+        categoryBadge: "bg-emerald-100 text-emerald-700",
+        fileType: "HWP",
+        fileName: "gongmun_sample3_president.hwp",
+        docNumber: "시행규칙 [별지 제3호서식]",
+        title: "대통령 결재문서 표준 서식",
+        date: "상시 서식 규격",
+        organization: "행정안전부 / 대통령비서실",
+        summary: "국무회의 안건이나 정부 주요 국가 시책 등 대한민국 대통령의 최종 서명·결재를 받는 공식 기안 양식입니다.",
+        keyPoints: [
+          { label: "결재선", value: "기안부처 장관 ▷ 국무총리 ▷ 대통령 서명란으로 이어지는 최고위 결재 규격" },
+          { label: "규격", value: "엄격한 문서 마진 및 국새·대통령 직인 날인 위치 규정 반영" }
+        ],
+        tags: ["대통령결재", "국무회의", "최고위공문서", "국정안건"]
+      },
+      {
+        id: "template_4",
+        category: "template",
+        categoryName: "공문서 서식",
+        categoryBadge: "bg-emerald-100 text-emerald-700",
+        fileType: "HWP",
+        fileName: "gongmun_sample4_prime_minister.hwp",
+        docNumber: "시행규칙 [별지 제4호서식]",
+        title: "국무총리 결재문서 표준 서식",
+        date: "상시 서식 규격",
+        organization: "행정안전부 / 국무조정실",
+        summary: "부처 간 정책 조정이나 국무총리 훈령, 총리 재가가 필요한 정책 보고에 사용되는 전용 공문서 서식입니다.",
+        keyPoints: [
+          { label: "특징", value: "주무부처 장관 결재 후 국무총리 결재 및 부총리 협의 결재선 배치" }
+        ],
+        tags: ["총리결재", "정책조정", "정부표준서식"]
+      }
+    ];
+
+    let currentCategory = 'all';
+    let currentSelectedId = 'notice_1';
+    let searchQuery = '';
+
+    // Initialize counts
+    function updateCounts() {
+      document.getElementById('count-all').innerText = documents.length;
+      document.getElementById('count-notice').innerText = documents.filter(d => d.category === 'notice').length;
+      document.getElementById('count-law').innerText = documents.filter(d => d.category === 'law').length;
+      document.getElementById('count-template').innerText = documents.filter(d => d.category === 'template').length;
+    }
+
+    // Filter by Category
+    function filterCategory(cat) {
+      currentCategory = cat;
+      document.querySelectorAll('.category-btn').forEach(btn => {
+        btn.className = "category-btn px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition";
+      });
+      document.getElementById(`tab-${cat}`).className = "category-btn px-3 py-1.5 rounded-lg bg-white text-blue-700 shadow-xs transition";
+      renderList();
+    }
+
+    // Search Handler
+    function handleSearch() {
+      searchQuery = document.getElementById('searchInput').value.trim().toLowerCase();
+      renderList();
+    }
+
+    // Render Document List Cards
+    function renderList() {
+      const container = document.getElementById('docListContainer');
+      const filtered = documents.filter(doc => {
+        const matchesCategory = currentCategory === 'all' || doc.category === currentCategory;
+        const matchesSearch = !searchQuery || 
+          doc.title.toLowerCase().includes(searchQuery) ||
+          doc.docNumber.toLowerCase().includes(searchQuery) ||
+          doc.fileName.toLowerCase().includes(searchQuery) ||
+          doc.tags.some(t => t.toLowerCase().includes(searchQuery));
+        return matchesCategory && matchesSearch;
+      });
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="bg-white p-8 rounded-2xl border border-slate-200 text-center text-slate-400">
+            <i data-lucide="folder-search" class="w-8 h-8 mx-auto mb-2 opacity-50"></i>
+            <p class="text-sm font-semibold">검색 조건에 맞는 공문서가 없습니다.</p>
+          </div>
+        `;
+        lucide.createIcons();
+        return;
+      }
+
+      // If currently selected doc is not in filtered list, select the first one
+      if (!filtered.some(d => d.id === currentSelectedId)) {
+        currentSelectedId = filtered[0].id;
+      }
+
+      container.innerHTML = filtered.map(doc => {
+        const isSelected = doc.id === currentSelectedId;
+        const borderClass = isSelected ? "border-blue-500 bg-blue-50/40 ring-2 ring-blue-500/20" : "border-slate-200 bg-white hover:border-slate-300";
+        return `
+          <div onclick="selectDocument('${doc.id}')" 
+               class="p-4 rounded-xl border ${borderClass} cursor-pointer transition shadow-xs flex flex-col justify-between">
+            <div>
+              <div class="flex items-center justify-between text-xs mb-1.5">
+                <span class="px-2 py-0.5 rounded-md font-bold ${doc.categoryBadge}">
+                  ${doc.categoryName}
+                </span>
+                <span class="font-mono text-slate-400 font-bold text-[11px] bg-slate-100 px-1.5 py-0.5 rounded">
+                  ${doc.fileType}
+                </span>
+              </div>
+              <h3 class="text-sm font-bold text-slate-900 leading-snug line-clamp-2">
+                ${doc.title}
+              </h3>
+              <p class="text-xs text-slate-500 mt-1 flex items-center gap-2">
+                <span>${doc.docNumber}</span>
+                <span>•</span>
+                <span>${doc.date}</span>
+              </p>
+            </div>
+            <div class="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400">
+              <span class="truncate max-w-[220px]">${doc.fileName}</span>
+              <span class="text-blue-600 font-semibold flex items-center gap-0.5 shrink-0">
+                요약 보기 <i data-lucide="chevron-right" class="w-3 h-3"></i>
+              </span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      renderDetail();
+      lucide.createIcons();
+    }
+
+    // Select Document
+    function selectDocument(id) {
+      currentSelectedId = id;
+      renderList();
+    }
+
+    // Render Detail View
+    function renderDetail() {
+      const doc = documents.find(d => d.id === currentSelectedId);
+      const container = document.getElementById('detailContainer');
+      if (!doc) return;
+
+      container.innerHTML = `
+        <div class="space-y-6">
+          <!-- Top Meta -->
+          <div>
+            <div class="flex items-center gap-2 mb-2">
+              <span class="px-2.5 py-1 rounded-md text-xs font-bold ${doc.categoryBadge}">
+                ${doc.categoryName}
+              </span>
+              <span class="text-xs font-bold text-slate-500 bg-slate-100 px-2 py-0.5 rounded">
+                ${doc.fileType} 문서
+              </span>
+              <span class="text-xs text-slate-400 ml-auto font-mono">
+                ${doc.date}
+              </span>
+            </div>
+            <h2 class="text-xl sm:text-2xl font-black text-slate-900 leading-snug">
+              ${doc.title}
+            </h2>
+            <div class="flex flex-wrap items-center gap-y-1 gap-x-3 text-xs text-slate-500 mt-2">
+              <span><strong>문서번호:</strong> ${doc.docNumber}</span>
+              <span>•</span>
+              <span><strong>소관기관:</strong> ${doc.organization}</span>
+            </div>
+          </div>
+
+          <!-- Document One-line Summary Card -->
+          <div class="bg-blue-50/80 rounded-xl p-4 border border-blue-100">
+            <h4 class="text-xs font-bold text-blue-900 uppercase tracking-wider mb-1 flex items-center gap-1.5">
+              <i data-lucide="sparkles" class="w-3.5 h-3.5 text-blue-600"></i> 핵심 요약 브리핑
+            </h4>
+            <p class="text-sm text-slate-700 leading-relaxed font-medium">
+              ${doc.summary}
+            </p>
+          </div>
+
+          <!-- Key Points / Table-like specs -->
+          <div>
+            <h4 class="text-sm font-bold text-slate-900 mb-3 flex items-center gap-1.5">
+              <i data-lucide="check-circle-2" class="w-4 h-4 text-blue-600"></i> 주요 내용 및 세부 정보
+            </h4>
+            <div class="divide-y divide-slate-100 border border-slate-200 rounded-xl overflow-hidden text-xs sm:text-sm">
+              ${doc.keyPoints.map(kp => `
+                <div class="grid grid-cols-1 sm:grid-cols-12 p-3 sm:px-4 bg-white hover:bg-slate-50 transition">
+                  <div class="sm:col-span-4 font-bold text-slate-700 flex items-center gap-1.5">
+                    <span class="w-1.5 h-1.5 rounded-full bg-blue-500"></span> ${kp.label}
+                  </div>
+                  <div class="sm:col-span-8 text-slate-600 mt-1 sm:mt-0 font-normal leading-relaxed">
+                    ${kp.value}
+                  </div>
+                </div>
+              `).join('')}
+            </div>
+          </div>
+
+          <!-- File Storage Info Box -->
+          <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 text-xs text-slate-600 space-y-1.5">
+            <div class="flex items-center gap-2 font-bold text-slate-800">
+              <i data-lucide="hard-drive" class="w-4 h-4 text-slate-500"></i> 프로젝트 폴더 저장 원본 파일
+            </div>
+            <p class="font-mono text-slate-500 truncate">
+              파일명: <strong>${doc.fileName}</strong>
+            </p>
+            <div class="flex flex-wrap gap-1.5 pt-1">
+              ${doc.tags.map(t => `<span class="px-2 py-0.5 rounded-md bg-white border border-slate-200 text-[11px] text-slate-600 font-semibold">#${t}</span>`).join('')}
+            </div>
+          </div>
+        </div>
+      `;
+
+      lucide.createIcons();
+    }
+
+    // On Load
+    window.addEventListener('DOMContentLoaded', () => {
+      updateCounts();
+      renderList();
+      lucide.createIcons();
+    });
+  </script>
+</body>
+</html>
